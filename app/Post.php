@@ -8,10 +8,19 @@ use Illuminate\Support\Str;
 class Post extends Model
 {
 
+    //relazione OneToMany tra Post e Categories
     public function category(){
         return $this->belongsTo('App\Category');
     }
+    
+    //relazione ManyToMany tra Post e Tags
+    public function tags(){
+        return $this->belongsToMany('App\Tag');
+    }
 
+
+
+    
     protected $fillable = [
         'title',
         'slug',
