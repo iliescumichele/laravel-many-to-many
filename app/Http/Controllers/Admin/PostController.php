@@ -7,6 +7,7 @@ use App\Http\Requests\PostRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Post;
+use App\Category;
 
 class PostController extends Controller
 {
@@ -18,7 +19,8 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::orderBy('id', 'desc')->paginate(10);
-        return view( 'admin.posts.index', compact('posts') );
+        $categories = Category::all();
+        return view( 'admin.posts.index', compact('posts', 'categories') );
     }
 
     /**
@@ -28,7 +30,8 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('admin.posts.create');
+        $categories = Category::all();
+        return view('admin.posts.create', compact('categories') );
     }
 
     /**
@@ -70,11 +73,12 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(POST $post)
     {
-        $item = Post::find($id);
-        if($item){
-            return view('admin.posts.edit', compact('item'));
+        
+        $categories = Category::all();
+        if($post){
+            return view('admin.posts.edit', compact('post', 'categories'));
         }
         abort(404, 'Prodotto non presente');
     }

@@ -18,6 +18,7 @@
           <tr>
             <th scope="col">#ID</th>
             <th scope="col">Titolo</th>
+            <th scope="col">Categoria</th>
             <th scope="col">Azioni</th>
           </tr>
         </thead>
@@ -27,6 +28,12 @@
                 <tr>
                     <th scope="row">{{ $item->id}}</th>
                     <td>{{ $item->title}}</td>
+
+                    {{-- ternario, controllo della relazione--}}
+                    <td>{{ $item->category ? $item->category->name : 'NULL' }}</td>
+                    {{-- <td>{{ !empty($item->category) ? $item->category->name : 'NULL' }}</td> --}}
+
+                    {{-- bottoni --}}
                     <td>
                         <a class="btn btn-info" href="{{ route('admin.posts.show', $item) }}">SHOW</a>
                         <a class="btn btn-warning" href="{{ route('admin.posts.edit', $item) }}">EDIT</a>
@@ -39,6 +46,8 @@
                             <button type="submit" class="btn btn-danger">DESTROY</button>
                         </form>
                     </td>
+                    {{-- /bottoni --}}
+
                 </tr>
             @endforeach
 
@@ -46,6 +55,32 @@
     </table>
 
     {{ $posts->links() }}
+
+
+    <div class="elenco-posts">
+        <h2 class="mt-5">Elenco POST divisi per categorie</h2>
+        <div class="row row-cols-6 my-3">
+
+            @foreach ($categories as $category)
+                <div class="col my-2">
+                    <h3 class="py-3">{{ $category->name }}</h3>
+                    <ul>
+
+                        @foreach ($category->posts as $post)
+                            <li><a href="{{ route('admin.posts.show', $post) }}">{{ $post->title }}</a></li>
+                        @endforeach
+
+                        @forelse ($category->posts as $post)
+                            <li><a href="{{ route('admin.posts.show', $post) }}">{{ $post->title }}</a></li>
+                        @empty
+                            <li>Non ci sono posto per questa categoria</li>
+                        @endforelse
+
+                    </ul>
+                </div>
+            @endforeach
+        </div>
+    </div>
       
 </div>
 @endsection
