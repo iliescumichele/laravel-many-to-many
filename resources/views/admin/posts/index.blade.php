@@ -19,6 +19,7 @@
             <th scope="col">#ID</th>
             <th scope="col">Titolo</th>
             <th scope="col">Categoria</th>
+            <th scope="col">Tags</th>
             <th scope="col">Azioni</th>
           </tr>
         </thead>
@@ -26,12 +27,25 @@
 
             @foreach ($posts as $item)
                 <tr>
+                    {{-- ID --}}
                     <th scope="row">{{ $item->id}}</th>
+
+                    {{-- NOME --}}
                     <td>{{ $item->title}}</td>
 
+                    {{-- CATEGORIA --}}
                     {{-- ternario, controllo della relazione--}}
                     <td>{{ $item->category ? $item->category->name : 'NULL' }}</td>
                     {{-- <td>{{ !empty($item->category) ? $item->category->name : 'NULL' }}</td> --}}
+
+                    {{-- TAGS --}}
+                    <td>
+                        @forelse ($item->tags as $tag)
+                            <span class="badge badge-dark">{{ $tag->name }}</span>
+                        @empty
+                            NO-TAG
+                        @endforelse
+                    </td>
 
                     {{-- bottoni --}}
                     <td>
