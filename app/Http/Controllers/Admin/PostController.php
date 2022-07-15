@@ -84,8 +84,9 @@ class PostController extends Controller
     {
         
         $categories = Category::all();
+        $tags = Tag::all();
         if($post){
-            return view('admin.posts.edit', compact('post', 'categories'));
+            return view('admin.posts.edit', compact('post', 'categories', 'tags'));
         }
         abort(404, 'Prodotto non presente');
     }
@@ -97,7 +98,7 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, Post $post, Tag $tags)
     {
         //$post = Post::find($id);
         $data = $request -> all();
@@ -109,6 +110,12 @@ class PostController extends Controller
         }
         
         $post -> update($data);
+
+        if( array_key_exists('tags', $data) ){
+            $post->tags()->sync( $data['tags'] );
+        } else {
+            $post->tags()->detach();
+        }
 
         return redirect() -> route('admin.posts.show', $post);
     }
